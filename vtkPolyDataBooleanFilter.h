@@ -17,6 +17,8 @@ limitations under the License.
 #ifndef __vtkPolyDataBooleanFilter_h
 #define __vtkPolyDataBooleanFilter_h
 
+#include "vtkFiltersGeneralModule.h" // For export macro
+
 #include <vector>
 #include <deque>
 #include <map>
@@ -219,7 +221,7 @@ enum class Rel {
 
 typedef std::map<int, Rel> RelationsType;
 
-class VTK_EXPORT vtkPolyDataBooleanFilter : public vtkPolyDataAlgorithm {
+class VTKFILTERSGENERAL_EXPORT vtkPolyDataBooleanFilter : public vtkPolyDataAlgorithm {
     vtkPolyData *resultA, *resultB, *contLines;
     vtkPolyData *modPdA, *modPdB;
     vtkCellData *cellDataA, *cellDataB;

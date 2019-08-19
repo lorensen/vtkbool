@@ -1,0 +1,11 @@
+NAME
+  VTK::Boolean
+LIBRARY_NAME
+  Boolean
+DEPENDS
+  VTK::CommonCore
+  VTK::CommonExecutionModel
+  VTK::FiltersPoints
+  VTK::IOLegacy
+DESCRIPTION
+ "This module contains classes to do polydata boolean operations."
