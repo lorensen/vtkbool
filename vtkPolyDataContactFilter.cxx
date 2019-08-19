@@ -237,11 +237,11 @@ void vtkPolyDataContactFilter::PreparePolyData (vtkPolyData *pd) {
     }
 
     int type;
-    for (int i = 0; i < numCells; i++) {
-        type = pd->GetCellType(i);
+    for (int ii = 0; ii < numCells; ii++) {
+        type = pd->GetCellType(ii);
 
         if (type != VTK_POLYGON && type != VTK_QUAD && type != VTK_TRIANGLE) {
-            pd->DeleteCell(i);
+            pd->DeleteCell(ii);
         }
 
     }
@@ -258,7 +258,7 @@ void vtkPolyDataContactFilter::PreparePolyData (vtkPolyData *pd) {
 
 }
 
-InterPtType vtkPolyDataContactFilter::InterEdgeLine (double *eA, double *eB, double *r, double *pt, int _pid) {
+InterPtType vtkPolyDataContactFilter::InterEdgeLine (double *eA, double *eB, double *r, double *pt, int vtkNotUsed(_pid)) {
 
     InterPtType inter;
 
@@ -491,7 +491,7 @@ InterPtsType vtkPolyDataContactFilter::InterPolyLine (vtkPoints *pts, vtkIdList 
             }
         }
 
-        std::map<int, int> locs;
+        std::map<size_t, size_t> locs;
 
         for (itr = interPts2.begin(); itr != interPts2.end(); ++itr) {
             if (itr->end != NO_USE) {
@@ -675,24 +675,24 @@ void vtkPolyDataContactFilter::InterPolys (vtkIdType idA, vtkIdType idB) {
 
             for (itr = overlaps.begin(); itr != overlaps.end(); ++itr) {
 
-                auto &f = itr->first,
-                    &s = itr->second;
+                auto &first = itr->first,
+                    &second = itr->second;
 
 #ifdef DEBUG
-                std::cout << "first " << f.ind
-                    << ", second " << s.ind
+                std::cout << "first " << first.ind
+                    << ", second " << second.ind
                     << std::endl;
 #endif
 
                 vtkIdList *linePts = vtkIdList::New();
 
-                linePts->InsertNextId(contPts->InsertNextPoint(f.pt));
-                linePts->InsertNextId(contPts->InsertNextPoint(s.pt));
+                linePts->InsertNextId(contPts->InsertNextPoint(first.pt));
+                linePts->InsertNextId(contPts->InsertNextPoint(second.pt));
 
                 contLines->InsertNextCell(VTK_LINE, linePts);
 
-                sourcesA->InsertNextTuple2(f.srcA, s.srcA);
-                sourcesB->InsertNextTuple2(f.srcB, s.srcB);
+                sourcesA->InsertNextTuple2(first.srcA, second.srcA);
+                sourcesB->InsertNextTuple2(first.srcB, second.srcB);
 
                 linePts->Delete();
 
@@ -748,7 +748,7 @@ OverlapsType vtkPolyDataContactFilter::OverlapLines (InterPtsType &intersA, Inte
 
 }
 
-int vtkPolyDataContactFilter::InterOBBNodes (vtkOBBNode *nodeA, vtkOBBNode *nodeB, vtkMatrix4x4 *mat, void *caller) {
+int vtkPolyDataContactFilter::InterOBBNodes (vtkOBBNode *nodeA, vtkOBBNode *nodeB, vtkMatrix4x4 *vtkNotUsed(mat), void *caller) {
     vtkPolyDataContactFilter *self = reinterpret_cast<vtkPolyDataContactFilter*>(caller);
 
     vtkIdList *cellsA = nodeA->Cells;

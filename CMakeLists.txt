@@ -12,9 +12,45 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 3.1)
-project(vtkbool VERSION 2.7.2)
+if(DEFINED VTK_MODULE_ENABLE_VTK_Boolean)
+message(STATUS "Boolean: Building as a Remote VTK module")
+set(Module_SRCS
+    vtkPolyDataBooleanFilter.cxx
+    vtkPolyDataContactFilter.cxx
+    )
 
+if (VTK_VERSION VERSION_LESS "8.90.0")
+  vtk_module_library(Boolean ${Module_SRCS})
+else()
+  file(COPY libs/merger/Merger.cxx DESTINATION .)
+  file(COPY libs/merger/Merger.h DESTINATION .)
+  file(COPY libs/decomp/Decomposer.cxx DESTINATION .)
+  file(COPY libs/decomp/Decomposer.h DESTINATION .)
+  file(COPY libs/vp/Tools.cxx DESTINATION .)
+  file(COPY libs/vp/Tools.h DESTINATION .)
+  file(COPY libs/vp/VisPoly.cxx DESTINATION .)
+  file(COPY libs/vp/VisPoly.h DESTINATION .)
+  file(COPY libs/vp/RmTrivials.cxx DESTINATION .)
+  file(COPY libs/vp/RmTrivials.h DESTINATION .)
+  vtk_module_add_module(VTK::Boolean
+    SOURCES ${Module_SRCS} RmTrivials.cxx VisPoly.cxx Decomposer.cxx Utilities.cxx Merger.cxx Tools.cxx
+    )
+endif()
+set_source_files_properties(
+    Merger.cxx Utilities.cxx
+    PROPERTIES WRAP_EXCLUDE 1
+    )
+if(MSVC)
+    add_compile_options(/EHsc)
+    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+else()
+    target_compile_options(Boolean PUBLIC -Wall -Wextra -Wshadow -Woverloaded-virtual -Wno-deprecated -Wno-strict-overflow -Wno-array-bounds)
+#target_compile_options(Boolean PUBLIC -Wparentheses)
+endif()
+include_directories(libs/aabb)
+else()
+message(STATUS "vtkbool: Building as an independent library")
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -192,4 +228,5 @@ else()
 
     endif(VTK_FOUND)
 
+endif()
 endif()

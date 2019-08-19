@@ -19,7 +19,7 @@ limitations under the License.
 
 class BB {
 public:
-    BB (double minX, double maxX, double minY, double maxY) : minX(minX), maxX(maxX), minY(minY), maxY(maxY) {}
+    BB (double _minX, double _maxX, double _minY, double _maxY) : minX(_minX), maxX(_maxX), minY(_minY), maxY(_maxY) {}
     BB () {}
 
     double GetArea () {
@@ -48,11 +48,11 @@ public:
 
 class Line : public Obj {
 public:
-    Line (const Point &a, const Point &b, int grp = NO_USE) : bb{std::min(a.x, b.x),
-        std::max(a.x, b.x),
-        std::min(a.y, b.y),
-        std::max(a.y, b.y)},
-        grp(grp), pA(a), pB(b) { }
+  Line (const Point &a, const Point &b, int _grp = NO_USE) : bb{std::min(a.x, b.x),
+             std::max(a.x, b.x),
+             std::min(a.y, b.y),
+             std::max(a.y, b.y)},
+    grp(_grp), pA(a), pB(b) { }
 
     virtual BB GetBB () const {
         return bb;
@@ -72,14 +72,14 @@ public:
 class Node {
 public:
     BB bb;
-    Node (std::shared_ptr<Obj> obj) : obj(obj), left(NO_USE), right(NO_USE), parent(NO_USE) {
+    Node (std::shared_ptr<Obj> _obj) : obj(_obj), left(NO_USE), right(NO_USE), parent(NO_USE) {
         if (obj) {
             bb = obj->GetBB();
         }
     }
 
-    int left, right, parent;
     std::shared_ptr<Obj> obj;
+    int left, right, parent;
 };
 
 class AABB {

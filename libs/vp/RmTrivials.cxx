@@ -55,12 +55,10 @@ void TrivialRm::RemovePockets (VertsType3 &good, double *rot, double d, Src src)
         IdsType pocket;
         GetPocket(p, pocket);
 
-        IdsType::iterator itr;
-
         std::vector<int> _s;
 
-        for (itr = pocket.begin()+1; itr != pocket.end()-1; ++itr) {
-            double e = (verts[*itr].x*rot[0]+verts[*itr].y*rot[1])-d;
+        for (IdsType::iterator itrr = pocket.begin()+1; itrr != pocket.end()-1; ++itrr) {
+            double e = (verts[*itrr].x*rot[0]+verts[*itrr].y*rot[1])-d;
 
             if (std::abs(e) > E) {
                 _s.push_back(int(e/std::abs(e)));
@@ -82,7 +80,7 @@ void TrivialRm::RemovePockets (VertsType3 &good, double *rot, double d, Src src)
                 std::reverse(_poly.begin(), _poly.end());
             }
 
-            if (*(_s.begin()) == 1 ^ TestCW(_poly)) {
+            if ((*(_s.begin()) == 1) ^ TestCW(_poly)) {
                 p.dir = Dir::BACKWARD;
             } else {
                 p.dir = Dir::FORWARD;
@@ -368,9 +366,9 @@ void TrivialRm::RemovePockets (VertsType3 &good, double *rot, double d, Src src)
             if (itr2->side == Side::OUT) {
                 IdsType &pocket = itr2->pocket;
 
-                IdsType::iterator itr3;
-                for (itr3 = pocket.begin()+1; itr3 != pocket.end()-1; ++itr3) {
-                    verts[*itr3].rm = true;
+                IdsType::iterator itrr3;
+                for (itrr3 = pocket.begin()+1; itrr3 != pocket.end()-1; ++itrr3) {
+                    verts[*itrr3].rm = true;
                 }
             }
         }
@@ -510,8 +508,8 @@ void TrivialRm::GetSimplified (PolyType &res) {
             }
         }
 
-        for (auto& itr : newVerts) {
-            verts.push_back(itr.second);
+        for (auto& itrr : newVerts) {
+            verts.push_back(itrr.second);
         }
 
     }

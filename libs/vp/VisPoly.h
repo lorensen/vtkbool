@@ -73,8 +73,8 @@ public:
 class Vert2 {
 public:
     Vert2 (int _i, double _l) : i(_i), l(_l) {}
-    double l;
     int i;
+    double l;
 };
 
 typedef std::vector<Vert2> VertsType2;
@@ -83,7 +83,7 @@ class Pos {
 public:
     int edA, edB;
     double t;
-    Pos (int edA, int edB, double t) : edA(edA), edB(edB), t(t) {}
+    Pos (int _edA, int _edB, double _t) : edA(_edA), edB(_edB), t(_t) {}
     Pos () {}
 
     friend std::ostream& operator<< (std::ostream &out, const Pos &p) {
@@ -121,7 +121,7 @@ public:
 class Vert4 : public Point {
 public:
     double t;
-    Vert4 (const Point &p, double t) : Point(p), t(t) {}
+    Vert4 (const Point &_p, double _t) : Point(_p), t(_t) {}
 
     friend std::ostream& operator<< (std::ostream &out, const Vert4 &v) {
         out << (Point) v

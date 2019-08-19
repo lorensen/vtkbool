@@ -58,12 +58,14 @@ void SubP::RestoreS () {
 }
 
 Decomposer::Decomposer (const PolyType &_orig) : orig(_orig), savedPts(new SavedPtsType) {
+#ifndef NDEBUG
     {
-        int i = 0;
+      int i = 0;
         for(auto& p : orig) {
             assert(p.id == i++);
         }
     }
+#endif
 
     Simplify(orig, savedPts, specTags, poly, NO_USE, false);
 
@@ -459,9 +461,9 @@ void Decomposer::GetDecomposed (DecResType &res) {
 
     res.push_back({});
 
-    int i = 0,
-        p = 0,
-        q = 0;
+    int i = 0;
+    size_t p = 0;
+    size_t q = 0;
 
     std::vector<int> ps, rs;
 
@@ -521,8 +523,8 @@ void Decomposer::GetDecomposed (DecResType &res) {
         SimpleRestore(_poly, *savedPts, _res);
 
         IdsType _dec;
-        for (auto& p : _res) {
-            _dec.push_back(p.id);
+        for (auto& pp : _res) {
+            _dec.push_back(pp.id);
         }
 
         dec.swap(_dec);

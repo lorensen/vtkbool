@@ -28,7 +28,7 @@ limitations under the License.
 #include "RmTrivials.h"
 #include "AABB.h"
 
-void GetVisPoly (PolyType &poly, Tracker &tr, PolyType &res, SavedPtsType &savedPts, int ind) {
+void GetVisPoly (PolyType &poly, Tracker &tr, PolyType &res, SavedPtsType &, int ind) {
     if (poly.size() < 3) {
         return;
     }
@@ -309,10 +309,10 @@ void GetVisPoly (PolyType &poly, Tracker &tr, PolyType &res, SavedPtsType &saved
 
                             vtkbool_throw(vp.size() > 0, "GetVisPoly", "too many pop's");
 
-                            std::shared_ptr<D> d(Intersect(x, verts.at(v).r, verts.at(a).pt, verts.at(b).pt));
+                            std::shared_ptr<D> dd(Intersect(x, verts.at(v).r, verts.at(a).pt, verts.at(b).pt));
 
-                            if (d) {
-                                if (d->t2 < E) {
+                            if (dd) {
+                                if (dd->t2 < E) {
                                     int c = vp.end()[-2];
 
                                     if (Ld(x, verts.at(a).pt, verts.at(c).pt) || IsNear(verts.at(a).pt, ptV)) {
@@ -323,7 +323,7 @@ void GetVisPoly (PolyType &poly, Tracker &tr, PolyType &res, SavedPtsType &saved
                                     }
 
                                 } else {
-                                    Point _p(d->s);
+                                    Point _p(dd->s);
 
                                     Vert _v(x, _p, ref);
                                     verts.push_back(_v);
@@ -336,7 +336,7 @@ void GetVisPoly (PolyType &poly, Tracker &tr, PolyType &res, SavedPtsType &saved
 
                                     t = k;
 
-                                    tr.Track(verts.at(a), verts.at(b), _v, d->t2);
+                                    tr.Track(verts.at(a), verts.at(b), _v, dd->t2);
 
                                 }
 
@@ -390,18 +390,18 @@ void GetVisPoly (PolyType &poly, Tracker &tr, PolyType &res, SavedPtsType &saved
 
                                     // std::cout << "?_ 3> " << (_x+1) << ", " << (a.nxt+1) << std::endl;
 
-                                    std::shared_ptr<D> d(Intersect(x, verts.at(v).r, ptA, ptB));
+                                    std::shared_ptr<D> dd(Intersect(x, verts.at(v).r, ptA, ptB));
 
-                                    if (d
+                                    if (dd
                                         && (!IsFrontfaced(verts.at(v).r, ptA, ptB)
                                             || IsNear(ptA, ptV))) { // spezialfall (special:1, ind:1)
 
-                                        if (d->t2 < E) {
+                                        if (dd->t2 < E) {
                                             verts.at(vp.back()).nxt = _x;
                                             vp.push_back(_x);
 
                                         } else {
-                                            Point _p(d->s);
+                                            Point _p(dd->s);
 
                                             Vert _v(x, _p, ref, a.nxt);
                                             verts.push_back(_v);
@@ -411,7 +411,7 @@ void GetVisPoly (PolyType &poly, Tracker &tr, PolyType &res, SavedPtsType &saved
 
                                             vp.push_back(k);
 
-                                            tr.Track(a, b, _v, d->t2);
+                                            tr.Track(a, b, _v, dd->t2);
 
                                         }
 
@@ -1002,7 +1002,7 @@ void GetVisPoly_wrapper (PolyType &poly, PolyType &res, int ind) {
                 itr2 = res.begin();
             }
 
-            lines.emplace_back(new Line({*itr}, {*itr2}));
+            lines.emplace_back(new Line({*itr}, {*itr2},0));
 
             pts.insert(*itr);
 

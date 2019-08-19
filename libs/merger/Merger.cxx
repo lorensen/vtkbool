@@ -105,7 +105,7 @@ void Merger::GetMerged (PolysType &res) {
 }
 
 void Merger::Merge (PolysType &group, PolyType &merged) {
-    int numPolys = group.size();
+    size_t numPolys = group.size();
 
     int a = 0,
         b = 0;
@@ -313,18 +313,18 @@ void Merger::Merge (PolysType &group, PolyType &merged) {
     typedef std::deque<Point> PolyTypeD;
 
     auto FindId = [&](PolyTypeD &poly, int id, int end, int s) -> PolyTypeD::iterator {
-        PolyTypeD::iterator itr;
+        PolyTypeD::iterator itrr;
 
         double pt[3];
         pts->GetPoint(end, pt);
 
         int num = poly.size();
 
-        for (itr = poly.begin(); itr != poly.end(); ++itr) {
-            if (itr->id == id) {
-                int i = itr-poly.begin();
+        for (itrr = poly.begin(); itrr != poly.end(); ++itrr) {
+            if (itrr->id == id) {
+                int i = itrr-poly.begin();
 
-                double v[] = {pt[0]-itr->x, pt[1]-itr->y};
+                double v[] = {pt[0]-itrr->x, pt[1]-itrr->y};
                 Normalize(v);
 
                 int iA = (i+1)%num,
@@ -333,8 +333,8 @@ void Merger::Merge (PolysType &group, PolyType &merged) {
                 Point &pA = poly[iA],
                     &pB = poly[iB];
 
-                double wA[] = {pA.x-itr->x, pA.y-itr->y},
-                    wB[] = {pB.x-itr->x, pB.y-itr->y};
+                double wA[] = {pA.x-itrr->x, pA.y-itrr->y},
+                    wB[] = {pB.x-itrr->x, pB.y-itrr->y};
 
                 Normalize(wA);
                 Normalize(wB);
@@ -348,30 +348,30 @@ void Merger::Merge (PolysType &group, PolyType &merged) {
             }
         }
 
-        assert(itr != poly.end());
+        assert(itrr != poly.end());
 
-        return itr;
+        return itrr;
     };
 
 
     // fügt die polygone zusammen
 
-    int num = numPolys;
+    size_t num = numPolys;
 
-    std::map<int, int> repls;
+    std::map<size_t, size_t> repls;
 
-    for (int i = 0; i < numPolys; i++) {
+    for (size_t i = 0; i < numPolys; i++) {
         repls[i] = i;
     }
 
     for (auto& con : cons) {
-        int a = con.f,
-            b = con.g;
+        int aa = con.f,
+            bb = con.g;
 
-        int pA = repls.at(src[a]),
-            pB = repls.at(src[b]);
+        int pA = repls.at(src[aa]),
+            pB = repls.at(src[bb]);
 
-        // std::cout << a << "->" << pA << ", " << b << "->" << pB << std::endl;
+        // std::cout << aa << "->" << pA << ", " << bb << "->" << pB << std::endl;
 
         PolyType &polyA = group.at(pA),
             &polyB = group.at(pB);
@@ -383,18 +383,18 @@ void Merger::Merge (PolysType &group, PolyType &merged) {
             deqB(polyB.begin(), polyB.end());
 
         /*
-        auto itrA = std::find_if(deqA.begin(), deqA.end(), [&a](const Point& pt) { return pt.id == a; });
-        auto itrB = std::find_if(deqB.begin(), deqB.end(), [&b](const Point& pt) { return pt.id == b; });
+        auto itrA = std::find_if(deqA.begin(), deqA.end(), [&aa](const Point& pt) { return pt.id == a; });
+        auto itrB = std::find_if(deqB.begin(), deqB.end(), [&bb](const Point& pt) { return pt.id == b; });
         */
 
-        auto itrA = FindId(deqA, a, b, pA);
-        auto itrB = FindId(deqB, b, a, pB);
+        auto itrA = FindId(deqA, aa, bb, pA);
+        auto itrB = FindId(deqB, bb, aa, pB);
 
         std::rotate(deqA.begin(), itrA, deqA.end());
         std::rotate(deqB.begin(), itrB, deqB.end());
 
-        // std::cout << deqA[0].id << " -> " << a << std::endl;
-        // std::cout << deqB[0].id << " -> " << b << std::endl;
+        // std::cout << deqA[0].id << " -> " << aa << std::endl;
+        // std::cout << deqB[0].id << " -> " << bb << std::endl;
 
         PolyType newPoly;
 
@@ -418,8 +418,8 @@ void Merger::Merge (PolysType &group, PolyType &merged) {
 
         group.push_back(newPoly);
 
-        // repls[src[a]] = num;
-        // repls[src[b]] = num;
+        // repls[src[aa]] = num;
+        // repls[src[bb]] = num;
 
         for (auto &v : newPoly) {
             repls[src[v.id]] = num;

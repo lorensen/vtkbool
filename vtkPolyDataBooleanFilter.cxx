@@ -225,12 +225,12 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
             cellIdsA->DeepCopy(origCellIdsA);
             cellIdsB->DeepCopy(origCellIdsB);
 
-            for (int i = 0; i < modPdA->GetNumberOfCells(); i++) {
-                origCellIdsA->SetValue(i, i);
+            for (int ii = 0; ii < modPdA->GetNumberOfCells(); ii++) {
+                origCellIdsA->SetValue(ii, ii);
             }
 
-            for (int i = 0; i < modPdB->GetNumberOfCells(); i++) {
-                origCellIdsB->SetValue(i, i);
+            for (int ii = 0; ii < modPdB->GetNumberOfCells(); ii++) {
+                origCellIdsB->SetValue(ii, ii);
             }
 
 
@@ -385,9 +385,9 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
 
             int numLines = contLines->GetNumberOfCells();
 
-            for (int i = 0; i < numLines; i++) {
-                involvedA.insert(contsA->GetValue(i));
-                involvedB.insert(contsB->GetValue(i));
+            for (int ii = 0; ii < numLines; ii++) {
+                involvedA.insert(contsA->GetValue(ii));
+                involvedB.insert(contsB->GetValue(ii));
             }
 
             relsA.clear();
@@ -678,15 +678,15 @@ bool vtkPolyDataBooleanFilter::GetPolyStrips (vtkPolyData *pd, vtkIntArray *cont
     }
 
     auto Next = [](const IdsType &ids, int id) -> int {
-        IdsType::const_iterator itr;
+        IdsType::const_iterator itrr;
 
-        itr = std::find(ids.begin(), ids.end(), id);
+        itrr = std::find(ids.begin(), ids.end(), id);
 
-        if (++itr == ids.end()) {
-            itr = ids.begin();
+        if (++itrr == ids.end()) {
+            itrr = ids.begin();
         }
 
-        return *itr;
+        return *itrr;
     };
 
     for (StripPt &sp : notCatched) {
@@ -766,7 +766,7 @@ bool vtkPolyDataBooleanFilter::GetPolyStrips (vtkPolyData *pd, vtkIntArray *cont
 
         std::deque<int> _lines(lines.begin(), lines.end());
 
-        int i = 0;
+        size_t i = 0;
 
         while (_lines.size() > 0) {
             vtkIdList *linePts = vtkIdList::New();
@@ -967,18 +967,18 @@ bool vtkPolyDataBooleanFilter::GetPolyStrips (vtkPolyData *pd, vtkIntArray *cont
 
         Bnds bnds(-E, E, -E, E);
 
-        std::vector<std::shared_ptr<Line>>::const_iterator itr5;
-        std::vector<std::shared_ptr<Obj>>::const_iterator itr6;
+        std::vector<std::shared_ptr<Line>>::const_iterator itrr5;
+        std::vector<std::shared_ptr<Obj>>::const_iterator itrr6;
 
-        for (itr5 = lines.begin(); itr5 != lines.end(); ++itr5) {
-            auto found = tree.Search(*itr5);
+        for (itrr5 = lines.begin(); itrr5 != lines.end(); ++itrr5) {
+            auto found = tree.Search(*itrr5);
 
-            const Line &lA = **itr5;
+            const Line &lA = **itrr5;
 
-            for (itr6 = found.begin(); itr6 != found.end(); ++itr6) {
-                // std::cout << itr6->use_count() << std::endl;
+            for (itrr6 = found.begin(); itrr6 != found.end(); ++itrr6) {
+                // std::cout << itrr6->use_count() << std::endl;
 
-                const Line &lB = dynamic_cast<Line&>(**itr6);
+                const Line &lB = dynamic_cast<Line&>(**itrr6);
 
                 // die linien dürfen nicht zum gleichen strip gehören und sich nicht an den enden berühren
 
@@ -1003,14 +1003,15 @@ void vtkPolyDataBooleanFilter::RemoveDuplicates (IdsType &lines) {
 
     IdsType unique;
 
-    int i, j;
+    size_t i;
+    size_t j;
 
     // die indexe der enden auf übereinstimmung prüfen
 
     vtkIdList *linePtsA = vtkIdList::New();
     vtkIdList *linePtsB = vtkIdList::New();
 
-    int numLines = lines.size();
+    size_t numLines = lines.size();
 
     for (i = 0; i < numLines-1; i++) {
         j = i+1;
@@ -1386,7 +1387,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                 << std::endl;
 #endif
 
-            int cycle = 0;
+            size_t cycle = 0;
 
             while (true) {
 
@@ -1585,24 +1586,24 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
 
                         int num = div.size();
 
-                        for (int i = 0; i < num; i++) {
+                        for (int ii = 0; ii < num; ii++) {
                             double ptA[3], ptB[3];
-                            pd->GetPoint(div[i], ptA);
-                            pd->GetPoint(div[(i+1)%num], ptB);
+                            pd->GetPoint(div[ii], ptA);
+                            pd->GetPoint(div[(ii+1)%num], ptB);
 
                             double d = GetD(ptA, ptB);
 
 #ifdef DEBUG
-                            std::cout << "edge (" << div[i] << ", "
-                                      << div[(i+1)%num] << "), d=" << d
+                            std::cout << "edge (" << div[ii] << ", "
+                                      << div[(ii+1)%num] << "), d=" << d
                                       << std::endl;
 #endif
 
                             if (d > 1e-6) {
-                                _div.push_back(div[i]);
+                                _div.push_back(div[ii]);
                             } else {
 #ifdef DEBUG
-                                std::cout << "rm " << div[i] << std::endl;
+                                std::cout << "rm " << div[ii] << std::endl;
 #endif
                             }
                         }
@@ -1652,8 +1653,8 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
             vtkIdList *cell = vtkIdList::New();
             cell->SetNumberOfIds(num);
 
-            for (int i = 0; i < num; i++) {
-                cell->SetId(i, p[i]);
+            for (int ii = 0; ii < num; ii++) {
+                cell->SetId(ii, p[ii]);
             }
 
             descIds.push_back(pd->InsertNextCell(VTK_POLYGON, cell));
@@ -1684,7 +1685,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
 
 }
 
-void vtkPolyDataBooleanFilter::CollapseCaptPoints (vtkPolyData *pd, PolyStripsType &polyStrips) {
+void vtkPolyDataBooleanFilter::CollapseCaptPoints (vtkPolyData *vtkNotUsed(pd), PolyStripsType &polyStrips) {
 
 #ifdef DEBUG
     std::cout << "CollapseCaptPoints()" << std::endl;
@@ -1783,16 +1784,16 @@ void vtkPolyDataBooleanFilter::CollapseCaptPoints (vtkPolyData *pd, PolyStripsTy
                 cell->Delete();
                 lines->Delete();
 
-                for (auto &s : shared) {
-                    if (s.second.size() > 1) {
-                        assert(s.second.size() == 2);
+                for (auto &ss : shared) {
+                    if (ss.second.size() > 1) {
+                        assert(ss.second.size() == 2);
 
-                        for (int l : s.second) {
+                        for (int l : ss.second) {
                             contLines->DeleteCell(l);
                             contLines->RemoveCellReference(l);
 
-                            pairs.insert({indA, s.first});
-                            pairs.insert({s.first, indA});
+                            pairs.insert({indA, ss.first});
+                            pairs.insert({ss.first, indA});
                         }
                     }
                 }
@@ -1826,16 +1827,16 @@ void vtkPolyDataBooleanFilter::CollapseCaptPoints (vtkPolyData *pd, PolyStripsTy
             auto Fct = [&](PolyStripsType &polyStrips_) -> void {
                 for (auto &ps : polyStrips_) {
                     StripsType &strips = ps.second.strips;
-                    StripPtsType &pts = ps.second.pts;
+                    StripPtsType &ptss = ps.second.pts;
 
-                    if (pts.count(indB) == 1) {
-                        if (pts.count(indA) == 0) {
-                            if (a.capt == pts[indB].capt) {
-                                pts[indA] = pts[indB];
-                                pts[indA].ind = indA;
-                                Cpy(pts[indA].pt, a.pt, 3);
-                            } else /*if (a.capt == CAPT_A && pts[indB].capt == CAPT_EDGE)*/ {
-                                pts[indA] = a;
+                    if (ptss.count(indB) == 1) {
+                        if (ptss.count(indA) == 0) {
+                            if (a.capt == ptss[indB].capt) {
+                                ptss[indA] = ptss[indB];
+                                ptss[indA].ind = indA;
+                                Cpy(ptss[indA].pt, a.pt, 3);
+                            } else /*if (a.capt == CAPT_A && ptss[indB].capt == CAPT_EDGE)*/ {
+                                ptss[indA] = a;
                             }
                         }
 
@@ -1850,7 +1851,7 @@ void vtkPolyDataBooleanFilter::CollapseCaptPoints (vtkPolyData *pd, PolyStripsTy
 
                         }
 
-                        pts.erase(indB);
+                        ptss.erase(indB);
                     }
 
                     if (pairs.size() > 0) {
@@ -2524,7 +2525,7 @@ void vtkPolyDataBooleanFilter::MergePoints (vtkPolyData *pd, PolyStripsType &pol
 
         EType group;
 
-        int i = 0;
+        size_t i = 0;
 
         while (pairs.size() > 0) {
             Pair &pair = pairs[i];
