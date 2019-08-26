@@ -280,7 +280,7 @@ public:
 
 protected:
     vtkPolyDataBooleanFilter ();
-    ~vtkPolyDataBooleanFilter ();
+    ~vtkPolyDataBooleanFilter () override;
 
   int ProcessRequest (vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector) override;
 

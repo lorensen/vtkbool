@@ -158,11 +158,11 @@ double GetT (double *a, double *b, double *c) {
 bool TestCW (const PolyType &poly) {
     // http://mathworld.wolfram.com/PolygonArea.html
 
-    int num = poly.size();
+    size_t num = poly.size();
 
     double sum = 0;
 
-    for (int i = 0; i < num; i++) {
+    for (size_t i = 0; i < num; i++) {
         const Point &a = poly[i],
             &b = poly[(i+1)%num];
         sum += a.x*b.y-b.x*a.y;
@@ -192,11 +192,11 @@ bool TestPIP (PolyType &poly, Point &pt) {
         }
     }
 
-    int num = poly.size();
+    size_t num = poly.size();
 
     bool in = false;
 
-    for (int i = 0; i < num; i++) {
+    for (size_t i = 0; i < num; i++) {
         Point &a = poly[i],
             &b = poly[(i+1)%num];
 
@@ -232,11 +232,11 @@ void GetExt (const PolyType &poly, Ext &ext) {
 }
 
 double GetArea (const PolyType &poly) {
-    int num = poly.size();
+    size_t num = poly.size();
 
     double sum = 0;
 
-    for (int i = 0; i < num; i++) {
+    for (size_t i = 0; i < num; i++) {
         const Point &a = poly[i],
             &b = poly[(i+1)%num];
         sum += a.x*b.y-b.x*a.y;
@@ -280,7 +280,4 @@ void GetSect (int tagA, int tagB, PolyType &poly) {
     })+1, poly.end());
 }
 
-#ifdef _WIN32
-int Point::_tag;
-#endif
 int Point::_tag;
