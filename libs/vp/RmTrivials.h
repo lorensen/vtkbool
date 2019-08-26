@@ -32,14 +32,14 @@ enum class Src {
 
 class Vert3 : public Point {
 public:
-    Vert3 (Point &p) : Point(p), rm(false), src(Src::NONE), t(0) {}
-    Vert3 (double *_s, Src _src, double _t) : Point(_s), rm(false), src(_src), t(_t) {}
+  Vert3 (Point &p) : Point(p), rm(false), src(Src::NONE), t(0), i(0) {}
+  Vert3 (double *_s, Src _src, double _t) : Point(_s), rm(false), src(_src), t(_t), i(0) {}
 
     bool rm;
     Src src;
     double t;
 
-    int i;
+  int i;
 
     friend std::ostream& operator<< (std::ostream &out, const Vert3 &v) {
         out << "id: " << v.id

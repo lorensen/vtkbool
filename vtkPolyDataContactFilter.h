@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef __vtkPolyDataContactFilter_h
-#define __vtkPolyDataContactFilter_h
+#ifndef vtkPolyDataContactFilter_h
+#define vtkPolyDataContactFilter_h
 
 #include "vtkFiltersGeneralModule.h" // For export macro
 #include <vtkPolyDataAlgorithm.h>
 
-#include "Utilities.h"
+#include "Utilities.h" // For Utilties
 
 class vtkOBBNode;
 class vtkMatrix4x4;
@@ -111,12 +111,12 @@ public:
     static vtkPolyDataContactFilter* New();
 
     static int InterOBBNodes (vtkOBBNode *nodeA, vtkOBBNode *nodeB, vtkMatrix4x4 *mat, void *caller);
-
+    void PrintSelf(ostream&, vtkIndent) override {};
 protected:
     vtkPolyDataContactFilter ();
     ~vtkPolyDataContactFilter ();
 
-    int ProcessRequest (vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector);
+  int ProcessRequest (vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector) override;
 
 private:
     vtkPolyDataContactFilter (const vtkPolyDataContactFilter&) = delete;

@@ -14,22 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef __vtkPolyDataBooleanFilter_h
-#define __vtkPolyDataBooleanFilter_h
+#ifndef vtkPolyDataBooleanFilter_h
+#define vtkPolyDataBooleanFilter_h
 
 #include "vtkFiltersGeneralModule.h" // For export macro
-
-#include <vector>
-#include <deque>
-#include <map>
-#include <set>
-#include <utility>
-#include <iostream>
-
 #include <vtkPolyDataAlgorithm.h>
-#include <vtkKdTreePointLocator.h>
 
-#include "Utilities.h"
+#include <vector> // For vector
+#include <deque> // For deque
+#include <map> // For map
+#include <set> // For set
+#include <iostream> // For io
+
+#include "Utilities.h" // For Utilities
 
 #define LOC_NONE 0
 #define LOC_INSIDE 1
@@ -266,6 +263,13 @@ public:
     void SetOperModeToDifference () { OperMode = OPER_DIFFERENCE; }
     void SetOperModeToDifference2 () { OperMode = OPER_DIFFERENCE2; }
 
+    // For compatibility withother boolean filters
+    void SetOperation(int operation) {SetOperMode(operation);}
+    int GetOperation(){return OperMode;}
+    void SetOperationToUnion (){OperMode = OPER_UNION;}
+    void SetOperationToIntersection () {OperMode = OPER_INTERSECTION;}
+    void SetOperationToDifference () {OperMode = OPER_DIFFERENCE;}
+
     vtkSetMacro(MergeRegs, bool);
     vtkGetMacro(MergeRegs, bool);
     vtkBooleanMacro(MergeRegs, bool);
@@ -278,7 +282,9 @@ protected:
     vtkPolyDataBooleanFilter ();
     ~vtkPolyDataBooleanFilter ();
 
-    int ProcessRequest (vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector);
+  int ProcessRequest (vtkInformation *request, vtkInformationVector **inputVector, vtkInformationVector *outputVector) override;
+
+  void PrintSelf(ostream&, vtkIndent) override {};
 
 private:
     vtkPolyDataBooleanFilter (const vtkPolyDataBooleanFilter&) = delete;
