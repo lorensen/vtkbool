@@ -2,10 +2,18 @@ NAME
   VTK::Boolean
 LIBRARY_NAME
   Boolean
+KIT
+  VTK::Filters
+GROUPS
+  StandAlone
 DEPENDS
   VTK::CommonCore
   VTK::CommonExecutionModel
   VTK::FiltersPoints
   VTK::IOLegacy
+TEST_DEPENDS
+  VTK::RenderingFreeType
+  VTK::FiltersSources
+  VTK::TestingCore
 DESCRIPTION
  "This module contains classes to do polydata boolean operations."

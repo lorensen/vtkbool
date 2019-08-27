@@ -18,7 +18,8 @@ set(Module_SRCS
     vtkPolyDataBooleanFilter.cxx
     vtkPolyDataContactFilter.cxx
     )
-
+set(VTK_BUILD_TESTING "YES")
+include_directories(libs/merger libs/decomp libs/vp libs/aabb)
 if (VTK_VERSION VERSION_LESS "8.90.0")
   vtk_module_library(Boolean ${Module_SRCS})
 else()
@@ -33,7 +34,7 @@ else()
   file(COPY libs/vp/RmTrivials.cxx DESTINATION .)
   file(COPY libs/vp/RmTrivials.h DESTINATION .)
   vtk_module_add_module(VTK::Boolean
-    SOURCES ${Module_SRCS} RmTrivials.cxx VisPoly.cxx Decomposer.cxx Utilities.cxx Merger.cxx Tools.cxx
+    SOURCES ${Module_SRCS}
     )
 endif()
 set_source_files_properties(
@@ -81,7 +82,7 @@ endif()
 set(srcs
     vtkPolyDataBooleanFilter.cxx
     vtkPolyDataContactFilter.cxx
-    Utilities.cxx)
+    )
 
 include_directories(".")
 

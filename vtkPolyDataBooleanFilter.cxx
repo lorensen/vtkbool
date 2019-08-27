@@ -43,13 +43,11 @@ limitations under the License.
 #include "vtkPolyDataBooleanFilter.h"
 #include "vtkPolyDataContactFilter.h"
 
-#include "Utilities.h"
-
 #include "Merger.h"
 #include "Decomposer.h"
 #include "AABB.h"
 
-#ifdef DEBUG
+#ifndef NDEBUG
 #include <chrono>
 #include <numeric>
 #include <iterator>
@@ -116,7 +114,7 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
         resultA = vtkPolyData::SafeDownCast(outInfoA->Get(vtkDataObject::DATA_OBJECT()));
         resultB = vtkPolyData::SafeDownCast(outInfoB->Get(vtkDataObject::DATA_OBJECT()));
 
-#ifdef DEBUG
+#ifndef NDEBUG
         using clock = std::chrono::steady_clock;
         std::vector<clock::duration> times;
         clock::time_point start;
@@ -138,7 +136,7 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
             cleanB->SetInputData(pdB);
             cleanB->Update();
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "Exporting modPdA.vtk" << std::endl;
             WriteVTK("modPdA.vtk", cleanA->GetOutput());
 
@@ -153,7 +151,7 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
 
             // ermittelt kontaktstellen
 
-#ifdef DEBUG
+#ifndef NDEBUG
 
             start = clock::now();
 #endif
@@ -163,13 +161,13 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
             cl->SetInputConnection(1, cleanB->GetOutputPort());
             cl->Update();
 
-#ifdef DEBUG
+#ifndef NDEBUG
             times.push_back(clock::now()-start);
 #endif
 
             contLines->DeepCopy(cl->GetOutput());
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "Exporting contLines.vtk" << std::endl;
             WriteVTK("contLines.vtk", contLines);
 
@@ -234,7 +232,7 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
             }
 
 
-#ifdef DEBUG
+#ifndef NDEBUG
             start = clock::now();
 #endif
 
@@ -247,37 +245,37 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
 
             }
 
-#ifdef DEBUG
+#ifndef NDEBUG
             times.push_back(clock::now()-start);
 #endif
 
             // löst ein sehr spezielles problem
 
-#ifdef DEBUG
+#ifndef NDEBUG
             start = clock::now();
 #endif
 
             CollapseCaptPoints(modPdA, polyStripsA);
             CollapseCaptPoints(modPdB, polyStripsB);
 
-#ifdef DEBUG
+#ifndef NDEBUG
             times.push_back(clock::now()-start);
 #endif
 
             // trennt die polygone an den linien
 
-#ifdef DEBUG
+#ifndef NDEBUG
             start = clock::now();
 #endif
 
             CutCells(modPdA, polyStripsA);
             CutCells(modPdB, polyStripsB);
 
-#ifdef DEBUG
+#ifndef NDEBUG
             times.push_back(clock::now()-start);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "Exporting modPdA_2.vtk" << std::endl;
             WriteVTK("modPdA_2.vtk", modPdA);
 
@@ -285,18 +283,18 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
             WriteVTK("modPdB_2.vtk", modPdB);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             start = clock::now();
 #endif
 
             RestoreOrigPoints(modPdA, polyStripsA);
             RestoreOrigPoints(modPdB, polyStripsB);
 
-#ifdef DEBUG
+#ifndef NDEBUG
             times.push_back(clock::now()-start);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "Exporting modPdA_3.vtk" << std::endl;
             WriteVTK("modPdA_3.vtk", modPdA);
 
@@ -304,18 +302,18 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
             WriteVTK("modPdB_3.vtk", modPdB);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             start = clock::now();
 #endif
 
             ResolveOverlaps(modPdA, contsA, polyStripsA);
             ResolveOverlaps(modPdB, contsB, polyStripsB);
 
-#ifdef DEBUG
+#ifndef NDEBUG
             times.push_back(clock::now()-start);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "Exporting modPdA_4.vtk" << std::endl;
             WriteVTK("modPdA_4.vtk", modPdA);
 
@@ -323,18 +321,18 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
             WriteVTK("modPdB_4.vtk", modPdB);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             start = clock::now();
 #endif
 
             AddAdjacentPoints(modPdA, contsA, polyStripsA);
             AddAdjacentPoints(modPdB, contsB, polyStripsB);
 
-#ifdef DEBUG
+#ifndef NDEBUG
             times.push_back(clock::now()-start);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "Exporting modPdA_5.vtk" << std::endl;
             WriteVTK("modPdA_5.vtk", modPdA);
 
@@ -342,18 +340,18 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
             WriteVTK("modPdB_5.vtk", modPdB);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             start = clock::now();
 #endif
 
             DisjoinPolys(modPdA, polyStripsA);
             DisjoinPolys(modPdB, polyStripsB);
 
-#ifdef DEBUG
+#ifndef NDEBUG
             times.push_back(clock::now()-start);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "Exporting modPdA_6.vtk" << std::endl;
             WriteVTK("modPdA_6.vtk", modPdA);
 
@@ -361,18 +359,18 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
             WriteVTK("modPdB_6.vtk", modPdB);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             start = clock::now();
 #endif
 
             MergePoints(modPdA, polyStripsA);
             MergePoints(modPdB, polyStripsB);
 
-#ifdef DEBUG
+#ifndef NDEBUG
             times.push_back(clock::now()-start);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "Exporting modPdA_7.vtk" << std::endl;
             WriteVTK("modPdA_7.vtk", modPdA);
 
@@ -404,18 +402,18 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
 
         }
 
-#ifdef DEBUG
+#ifndef NDEBUG
         times.push_back(clock::now()-start);
 #endif
 
         DecPolys_(modPdA, involvedA, relsA);
         DecPolys_(modPdB, involvedB, relsB);
 
-#ifdef DEBUG
+#ifndef NDEBUG
         times.push_back(clock::now()-start);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
         std::cout << "Exporting modPdA_8.vtk" << std::endl;
         WriteVTK("modPdA_8.vtk", modPdA);
 
@@ -423,7 +421,7 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
         WriteVTK("modPdB_8.vtk", modPdB);
 #endif
 
-#ifdef DEBUG
+#ifndef NDEBUG
         start = clock::now();
 #endif
 
@@ -433,12 +431,12 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
             CombineRegions();
         }
 
-#ifdef DEBUG
+#ifndef NDEBUG
         times.push_back(clock::now()-start);
 #endif
 
 
-#ifdef DEBUG
+#ifndef NDEBUG
         double sum = std::chrono::duration_cast<std::chrono::duration<double>>(std::accumulate(times.begin(), times.end(), clock::duration())).count();
 
         std::vector<clock::duration>::const_iterator itr;
@@ -459,7 +457,7 @@ int vtkPolyDataBooleanFilter::ProcessRequest(vtkInformation *request, vtkInforma
 
 void vtkPolyDataBooleanFilter::GetStripPoints (vtkPolyData *pd, vtkIntArray *sources, PStrips &pStrips, IdsType &lines) {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "GetStripPoints()" << std::endl;
 #endif
 
@@ -620,7 +618,7 @@ void vtkPolyDataBooleanFilter::GetStripPoints (vtkPolyData *pd, vtkIntArray *sou
 
     }
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "pts: " << std::endl;
     for (itr2 = pts.begin(); itr2 != pts.end(); ++itr2) {
         std::cout << itr2->first << ": " << itr2->second << std::endl;
@@ -630,7 +628,7 @@ void vtkPolyDataBooleanFilter::GetStripPoints (vtkPolyData *pd, vtkIntArray *sou
 }
 
 bool vtkPolyDataBooleanFilter::GetPolyStrips (vtkPolyData *pd, vtkIntArray *conts, vtkIntArray *sources, PolyStripsType &polyStrips) {
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "GetPolyStrips()" << std::endl;
 #endif
 
@@ -897,7 +895,7 @@ bool vtkPolyDataBooleanFilter::GetPolyStrips (vtkPolyData *pd, vtkIntArray *cont
                                     c3 = Coord(pA, pD);
 
                                 if ((c2 < c1) != (c3 < c1)) {
-#ifdef DEBUG
+#ifndef NDEBUG
                                     std::cout << "c1=" << c1 << ", c2=" << c2 << ", c3=" << c3
                                         << ", poly=" << itr2->first
                                         << ", " << ((pd == modPdA) ? "A" : "B")
@@ -1080,7 +1078,7 @@ bool vtkPolyDataBooleanFilter::HasArea (StripType &strip) {
 }
 
 void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polyStrips) {
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "CutCells()" << std::endl;
 #endif
 
@@ -1095,7 +1093,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
         int polyInd = itr->first;
         PStrips &pStrips = itr->second;
 
-#ifdef DEBUG
+#ifndef NDEBUG
         if (polyInd != 204) {
             //continue;
         }
@@ -1108,7 +1106,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
 
         int origId = origCellIds->GetValue(polyInd);
 
-#ifdef DEBUG
+#ifndef NDEBUG
         IdsType::iterator itr_;
         std::cout << "polyInd=" << polyInd << ", poly=[";
         for (itr_ = poly.begin(); itr_ != poly.end(); ++itr_) {
@@ -1152,7 +1150,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
         for (itr2 = strips.begin(); itr2 != strips.end(); ++itr2) {
             StripType &strip = *itr2;
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "strip [";
             for (auto &s : strip) {
                 std::cout << s.ind << ", ";
@@ -1187,7 +1185,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                 itr3->desc[0] = pdPts->InsertNextPoint(sp.cutPt);
                 itr3->desc[1] = pdPts->InsertNextPoint(sp.cutPt);
 
-#ifdef DEBUG
+#ifndef NDEBUG
                 std::cout << sp << " => " << *itr3 << std::endl;
 #endif
 
@@ -1214,7 +1212,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
         for (itr4 = edges.begin(); itr4 != edges.end(); ++itr4) {
             RefsType &edge = itr4->second;
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "edge (" << itr4->first << ", _)" << std::endl;
 #endif
 
@@ -1222,12 +1220,12 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                 StripPt &a_ = pts[a.ind],
                     &b_ = pts[b.ind];
 
-#ifdef DEBUG
+#ifndef NDEBUG
                 std::cout << "a_: " << a_ << " -> strip " << a.strip << std::endl;
                 std::cout << "b_: " << b_ << " -> strip " << b.strip << std::endl;
 #endif
 
-                if (a_.ind == b_.ind) {
+                if (a_.ind ==  b_.ind) {
                     // strips beginnen im gleichen punkt
 
                     if (a.strip != b.strip) {
@@ -1244,7 +1242,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                         StripPt &eA_ = pts[eA.ind],
                             &eB_ = pts[eB.ind];
 
-#ifdef DEBUG
+#ifndef NDEBUG
                         std::cout << "eA_: " << eA_ << std::endl;
                         std::cout << "eB_: " << eA_ << std::endl;
 #endif
@@ -1266,7 +1264,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                                dB += numPts;
                             }
 
-#ifdef DEBUG
+#ifndef NDEBUG
                             std::cout << "dA=" << dA << ", dB=" << dB << std::endl;
 #endif
 
@@ -1305,7 +1303,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
 
                             double ang = vtkMath::Dot(pStrips.n, n);
 
-#ifdef DEBUG
+#ifndef NDEBUG
                             std::cout << "ang=" << ang*180/PI << std::endl;
 #endif
 
@@ -1357,7 +1355,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                 }
             });
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "after sort" << std::endl;
             for (itr7 = edge.begin(); itr7 != edge.end(); ++itr7) {
                 std::cout << itr7->get().strip << ": " << pts[itr7->get().ind] << std::endl;
@@ -1381,7 +1379,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
             StripPtR &start = strip.front(),
                 &end = strip.back();
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "strip " << start.strip
                 << " refs=[" << start.ref << ", " << end.ref << "]"
                 << std::endl;
@@ -1405,7 +1403,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                         for (itr5 = p.begin(); itr5 != p.end(); ++itr5) {
                             divided[0].push_back(*itr5);
 
-#ifdef DEBUG
+#ifndef NDEBUG
                             std::cout << "add d[0] " << *itr5 << std::endl;
 #endif
 
@@ -1413,7 +1411,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                                 for (itr3 = strip.begin(); itr3 != strip.end(); ++itr3) {
                                     divided[0].push_back(itr3->desc[0]);
 
-#ifdef DEBUG
+#ifndef NDEBUG
                                     std::cout << "add d[0] " << itr3->desc[0] << std::endl;
 #endif
 
@@ -1426,7 +1424,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                         for (itr6 = strip.rbegin(); itr6 != strip.rend(); ++itr6) {
                             divided[1].push_back(itr6->desc[1]);
 
-#ifdef DEBUG
+#ifndef NDEBUG
                             std::cout << "add d[1] " << itr6->desc[1] << std::endl;
 #endif
 
@@ -1437,7 +1435,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                         for (itr5 = p.begin(); itr5 != p.end(); ++itr5) {
                             divided[d].push_back(*itr5);
 
-#ifdef DEBUG
+#ifndef NDEBUG
                             std::cout << "add d[" << d << "] " << *itr5 << std::endl;
 #endif
 
@@ -1445,7 +1443,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                                 for (itr3 = strip.begin(); itr3 != strip.end(); ++itr3) {
                                     divided[d].push_back(itr3->desc[0]);
 
-#ifdef DEBUG
+#ifndef NDEBUG
                                     std::cout << "add d[" << d << "] " << itr3->desc[0] << std::endl;
 #endif
 
@@ -1455,7 +1453,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                                 for (itr6 = strip.rbegin(); itr6 != strip.rend(); ++itr6) {
                                     divided[d].push_back(itr6->desc[1]);
 
-#ifdef DEBUG
+#ifndef NDEBUG
                                     std::cout << "add d[" << d << "] " << itr6->desc[1] << std::endl;
 #endif
 
@@ -1576,7 +1574,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                     // doppelte punkte entfernen
 
                     for (itr8 = divided.begin(); itr8 != divided.end(); ++itr8) {
-#ifdef DEBUG
+#ifndef NDEBUG
                         std::cout << "d[" << itr8-divided.begin() << "]" << std::endl;
 #endif
 
@@ -1593,7 +1591,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
 
                             double d = GetD(ptA, ptB);
 
-#ifdef DEBUG
+#ifndef NDEBUG
                             std::cout << "edge (" << div[ii] << ", "
                                       << div[(ii+1)%num] << "), d=" << d
                                       << std::endl;
@@ -1602,7 +1600,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
                             if (d > 1e-6) {
                                 _div.push_back(div[ii]);
                             } else {
-#ifdef DEBUG
+#ifndef NDEBUG
                                 std::cout << "rm " << div[ii] << std::endl;
 #endif
                             }
@@ -1687,7 +1685,7 @@ void vtkPolyDataBooleanFilter::CutCells (vtkPolyData *pd, PolyStripsType &polySt
 
 void vtkPolyDataBooleanFilter::CollapseCaptPoints (vtkPolyData *vtkNotUsed(pd), PolyStripsType &polyStrips) {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "CollapseCaptPoints()" << std::endl;
 #endif
 
@@ -1748,7 +1746,7 @@ void vtkPolyDataBooleanFilter::CollapseCaptPoints (vtkPolyData *vtkNotUsed(pd), 
             int indA = a.ind,
                 indB = b.ind;
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "collapsing " << b.ind << " -> " << a.ind << std::endl;
 #endif
 
@@ -1875,7 +1873,7 @@ void vtkPolyDataBooleanFilter::CollapseCaptPoints (vtkPolyData *vtkNotUsed(pd), 
 
 void vtkPolyDataBooleanFilter::RestoreOrigPoints (vtkPolyData *pd, PolyStripsType &polyStrips) {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "RestoreOrigPoints()" << std::endl;
 #endif
 
@@ -1919,7 +1917,7 @@ void vtkPolyDataBooleanFilter::RestoreOrigPoints (vtkPolyData *pd, PolyStripsTyp
 
 void vtkPolyDataBooleanFilter::DisjoinPolys (vtkPolyData *pd, PolyStripsType &polyStrips) {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "DisjoinPolys()" << std::endl;
 #endif
 
@@ -1976,7 +1974,7 @@ void vtkPolyDataBooleanFilter::DisjoinPolys (vtkPolyData *pd, PolyStripsType &po
 
 void vtkPolyDataBooleanFilter::ResolveOverlaps (vtkPolyData *pd, vtkIntArray *conts, PolyStripsType &polyStrips) {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "ResolveOverlaps()" << std::endl;
 #endif
 
@@ -2027,7 +2025,7 @@ void vtkPolyDataBooleanFilter::ResolveOverlaps (vtkPolyData *pd, vtkIntArray *co
 
             auto &history = itr3->history;
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << "ind: " << itr3->ind << ", history=[";
 
             for (auto& h : history) {
@@ -2076,7 +2074,7 @@ void vtkPolyDataBooleanFilter::ResolveOverlaps (vtkPolyData *pd, vtkIntArray *co
                         if (a.g == b.g) {
                             // kante existiert noch
 
-#ifdef DEBUG
+#ifndef NDEBUG
                             std::cout << "poly: " << a.g
                                 << ", edge: (" << a.f << ", " << b.f << ")"
                                 << std::endl;
@@ -2129,7 +2127,7 @@ void vtkPolyDataBooleanFilter::ResolveOverlaps (vtkPolyData *pd, vtkIntArray *co
         const Pair &pair = itr4->first;
         CountsType &c = itr4->second;
 
-#ifdef DEBUG
+#ifndef NDEBUG
         std::cout << pair << ": [";
         for (itr5 = c.begin(); itr5 != c.end(); ++itr5) {
             std::cout << "(" << itr5->first << ", " << itr5->second << "), ";
@@ -2144,7 +2142,7 @@ void vtkPolyDataBooleanFilter::ResolveOverlaps (vtkPolyData *pd, vtkIntArray *co
             if (itr5->second == 2) {
                 int i = pd->GetPoints()->InsertNextPoint(pt);
 
-#ifdef DEBUG
+#ifndef NDEBUG
                 std::cout << "repl " << itr5->first << " -> " << i << std::endl;
 #endif
 
@@ -2156,7 +2154,7 @@ void vtkPolyDataBooleanFilter::ResolveOverlaps (vtkPolyData *pd, vtkIntArray *co
 
 void vtkPolyDataBooleanFilter::AddAdjacentPoints (vtkPolyData *pd, vtkIntArray *conts, PolyStripsType &polyStrips) {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "AddAdjacentPoints()" << std::endl;
 #endif
 
@@ -2221,7 +2219,7 @@ void vtkPolyDataBooleanFilter::AddAdjacentPoints (vtkPolyData *pd, vtkIntArray *
 
         std::sort(pts.rbegin(), pts.rend());
 
-#ifdef DEBUG
+#ifndef NDEBUG
         std::cout << "edge=" << pair << std::endl;
 
         for (itr5 = pts.begin(); itr5 != pts.end(); ++itr5) {
@@ -2243,7 +2241,7 @@ void vtkPolyDataBooleanFilter::AddAdjacentPoints (vtkPolyData *pd, vtkIntArray *
                 seeds.insert(conts->GetValue(cells->GetId(i)));
             }
 
-#ifdef DEBUG
+#ifndef NDEBUG
             std::cout << itr5->ind << " -> seeds=[";
             for (auto s : seeds) {
                 std::cout << s << ", ";
@@ -2258,7 +2256,7 @@ void vtkPolyDataBooleanFilter::AddAdjacentPoints (vtkPolyData *pd, vtkIntArray *
 
         voids.push_back(pts.size()-1);
 
-#ifdef DEBUG
+#ifndef NDEBUG
         std::cout << "voids=[";
         for (itr6 = voids.begin(); itr6 != voids.end(); ++itr6) {
             std::cout << *itr6 << ", ";
@@ -2361,7 +2359,7 @@ void vtkPolyDataBooleanFilter::AddAdjacentPoints (vtkPolyData *pd, vtkIntArray *
 
 void vtkPolyDataBooleanFilter::MergePoints (vtkPolyData *pd, PolyStripsType &polyStrips) {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "MergePoints()" << std::endl;
 #endif
 
@@ -2418,14 +2416,14 @@ void vtkPolyDataBooleanFilter::MergePoints (vtkPolyData *pd, PolyStripsType &pol
     CType::iterator itr4, itr5;
     EType::iterator itr6;
 
-#ifdef DEBUG
+#ifndef NDEBUG
     AType::const_iterator _itr;
 #endif
 
     for (itr3 = inds.begin(); itr3 != inds.end(); ++itr3) {
         AType &bads = itr3->second;
 
-#ifdef DEBUG
+#ifndef NDEBUG
         std::cout << "ind=" << itr3->first << ", bads=[";
         for (_itr = bads.begin(); _itr != bads.end(); ++_itr) {
             std::cout << *_itr << ", ";
@@ -2443,7 +2441,7 @@ void vtkPolyDataBooleanFilter::MergePoints (vtkPolyData *pd, PolyStripsType &pol
 
         assert(numPts > 0);
 
-#ifdef DEBUG
+#ifndef NDEBUG
         std::cout << "pts=[";
         for (int i = 0; i < numPts; i++) {
             int ind = pts->GetId(i);
@@ -2492,7 +2490,7 @@ void vtkPolyDataBooleanFilter::MergePoints (vtkPolyData *pd, PolyStripsType &pol
             }
         }
 
-#ifdef DEBUG
+#ifndef NDEBUG
         for (itr4 = mergePts.begin(); itr4 != mergePts.end(); ++itr4) {
             std::cout << (itr4-mergePts.begin())
                       << ": (" << itr4->polyInd << ", " << itr4->ind
@@ -2514,7 +2512,7 @@ void vtkPolyDataBooleanFilter::MergePoints (vtkPolyData *pd, PolyStripsType &pol
             }
         }
 
-#ifdef DEBUG
+#ifndef NDEBUG
         DType::const_iterator _itr2;
         for (_itr2 = pairs.begin(); _itr2 != pairs.end(); ++_itr2) {
             std::cout << *_itr2 << std::endl;
@@ -2563,7 +2561,7 @@ void vtkPolyDataBooleanFilter::MergePoints (vtkPolyData *pd, PolyStripsType &pol
 
             if (i == pairs.size()) {
                 for (itr6 = group.begin()+1; itr6 != group.end(); ++itr6) {
-#ifdef DEBUG
+#ifndef NDEBUG
                     std::cout << "repl " <<  mergePts[*itr6].ind << " -> " << mergePts[group.front()].ind << std::endl;
 #endif
 
@@ -2638,7 +2636,7 @@ public:
     void GetLoc (PolyAtEdge &pT, int mode) {
         double beta = GetAngle(pA.r, pT.r, pA.e);
 
-#ifdef DEBUG
+#ifndef NDEBUG
         std::cout << "GetLoc() -> polyId "
                   << pT.polyId << ", beta " << (beta*180/PI) << std::endl;
 #endif
@@ -2694,7 +2692,7 @@ public:
 
 PolyPair GetEdgePolys (vtkPolyData *pd, vtkIdList *ptsA, vtkIdList *ptsB) {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "GetEdgePolys()" << std::endl;
 #endif
 
@@ -2768,7 +2766,7 @@ PolyPair GetEdgePolys (vtkPolyData *pd, vtkIdList *ptsA, vtkIdList *ptsB) {
 
     PolyPair pp(opp[0], opp[1]);
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << pp.pA << std::endl;
     std::cout << pp.pB << std::endl;
 
@@ -2782,7 +2780,7 @@ PolyPair GetEdgePolys (vtkPolyData *pd, vtkIdList *ptsA, vtkIdList *ptsB) {
 
 void vtkPolyDataBooleanFilter::CombineRegions () {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "CombineRegions()" << std::endl;
 #endif
 
@@ -2832,7 +2830,7 @@ void vtkPolyDataBooleanFilter::CombineRegions () {
     vtkPolyData *pdA = cfA->GetOutput();
     vtkPolyData *pdB = cfB->GetOutput();
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "Exporting modPdA_9.vtk" << std::endl;
     WriteVTK("modPdA_9.vtk", cfA->GetOutput());
 
@@ -2881,7 +2879,7 @@ void vtkPolyDataBooleanFilter::CombineRegions () {
         FindPoints(plA, ptA, fptsA);
         FindPoints(plB, ptA, fptsB);
 
-#ifdef DEBUG
+#ifndef NDEBUG
         std::cout << "line " << i << std::endl;
 #else
 
@@ -2925,7 +2923,7 @@ void vtkPolyDataBooleanFilter::CombineRegions () {
         int fsB = scalarsB->GetTuple1(ppB.pA.ptIdA);
         int lsB = scalarsB->GetTuple1(ppB.pB.ptIdA);
 
-#ifdef DEBUG
+#ifndef NDEBUG
         std::cout << "polyId " << ppA.pA.polyId << ", sA " << fsA << ", loc " << ppA.pA.loc << std::endl;
         std::cout << "polyId " << ppA.pB.polyId << ", sA " << lsA << ", loc " << ppA.pB.loc << std::endl;
         std::cout << "polyId " << ppB.pA.polyId << ", sB " << fsB << ", loc " << ppB.pA.loc << std::endl;
@@ -3120,7 +3118,7 @@ void vtkPolyDataBooleanFilter::CombineRegions () {
 
 void vtkPolyDataBooleanFilter::MergeRegions () {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "MergeRegions()" << std::endl;
 #endif
 
@@ -3301,7 +3299,7 @@ void _Wrapper::MergeAll () {
 
 void vtkPolyDataBooleanFilter::DecPolys_ (vtkPolyData *pd, InvolvedType &involved, RelationsType &rels) {
 
-#ifdef DEBUG
+#ifndef NDEBUG
     std::cout << "DecPolys_()" << std::endl;
 #endif
 
@@ -3328,7 +3326,7 @@ void vtkPolyDataBooleanFilter::DecPolys_ (vtkPolyData *pd, InvolvedType &involve
         int cellId = cells->GetId(i),
             origId = origCellIds->GetValue(cellId);
 
-#ifdef DEBUG
+#ifndef NDEBUG
         std::cout << "cellId " << cellId << std::endl;
 #endif
 
@@ -3419,3 +3417,9 @@ void vtkPolyDataBooleanFilter::DecPolys_ (vtkPolyData *pd, InvolvedType &involve
     cells->Delete();
 
 }
+#include "Utilities.cxx"
+#include "RmTrivials.cxx"
+#include "VisPoly.cxx"
+#include "Decomposer.cxx"
+#include "Merger.cxx"
+#include "Tools.cxx"
