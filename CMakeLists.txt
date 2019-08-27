@@ -41,8 +41,8 @@ set_source_files_properties(
     PROPERTIES WRAP_EXCLUDE 1
     )
 if(MSVC)
-#    add_compile_options(/EHsc)
-#    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+     add_compile_options(/EHsc)
+     add_definitions(-D_SCL_SECURE_NO_WARNINGS)
      set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 else()
     target_compile_options(Boolean PUBLIC -Wall -Wextra -Wshadow -Woverloaded-virtual -Wno-deprecated -Wno-strict-overflow -Wno-array-bounds)
