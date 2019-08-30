@@ -30,7 +30,7 @@ enum class _Src {
     B = 2
 };
 
-class InterPtType {
+class VTKFILTERSGENERAL_EXPORT InterPtType {
 public:
   InterPtType () : ind(0), onEdge(false), end(NO_USE), count(1), srcA(NO_USE), srcB(NO_USE) {}
 

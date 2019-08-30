@@ -45,7 +45,7 @@ limitations under the License.
 #define SIDE_START 0
 #define SIDE_END 1
 
-class StripPt {
+class VTKFILTERSGENERAL_EXPORT StripPt {
 public:
     StripPt () : t(0), capt(CAPT_NOT), catched(true) {
         edge[0] = NO_USE;
@@ -77,7 +77,7 @@ public:
     bool catched;
 };
 
-class StripPtR {
+class VTKFILTERSGENERAL_EXPORT StripPtR {
 public:
     StripPtR (int _ind) : ind(_ind)/*, desc{NO_USE, NO_USE}*/ {
         strip = NO_USE;
@@ -110,7 +110,7 @@ typedef std::map<int, StripPt> StripPtsType;
 typedef std::deque<StripPtR> StripType;
 typedef std::vector<StripType> StripsType;
 
-class PStrips {
+class VTKFILTERSGENERAL_EXPORT PStrips {
 public:
     PStrips () {}
     double n[3];
@@ -123,7 +123,7 @@ typedef std::map<int, PStrips> PolyStripsType;
 
 typedef std::vector<std::reference_wrapper<StripPtR>> RefsType;
 
-class StripPtL {
+class VTKFILTERSGENERAL_EXPORT StripPtL {
 public:
     StripPtL (const StripPt &sp) : ind(sp.ind) {
         Cpy(pt, sp.pt, 3);
@@ -139,7 +139,7 @@ public:
     }
 };
 
-class StripPtL2 {
+class VTKFILTERSGENERAL_EXPORT StripPtL2 {
 public:
     StripPtL2 (const StripPt &sp) : ind(sp.ind), t(sp.t), history(sp.history) {
         Cpy(pt, sp.pt, 3);
@@ -159,7 +159,7 @@ public:
     std::vector<Pair> history;
 };
 
-class StripPtL3 {
+class VTKFILTERSGENERAL_EXPORT StripPtL3 {
 public:
     StripPtL3 (const double *_pt, double _t, int _ind = NO_USE) : t(_t), ind(_ind) {
         Cpy(pt, _pt, 3);
@@ -180,7 +180,7 @@ public:
     }
 };
 
-class MergePt {
+class VTKFILTERSGENERAL_EXPORT MergePt {
 public:
     MergePt (int _polyInd, int _ind, double *_pt) : polyInd(_polyInd), ind(_ind) {
         Cpy(pt, _pt, 3);
@@ -192,7 +192,7 @@ public:
 
 typedef std::vector<IdsType> HolesType;
 
-class _Wrapper {
+class VTKFILTERSGENERAL_EXPORT _Wrapper {
     vtkPolyData *pd;
     IdsType descIds;
     int origId;
