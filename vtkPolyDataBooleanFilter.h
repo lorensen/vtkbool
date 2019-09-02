@@ -255,6 +255,14 @@ public:
     vtkTypeMacro(vtkPolyDataBooleanFilter, vtkPolyDataAlgorithm);
     static vtkPolyDataBooleanFilter* New ();
 
+    // For compatibility with vtkBooleanOperationPolyDataFilter
+  enum OperationType
+  {
+    VTK_UNION=0,
+    VTK_INTERSECTION,
+    VTK_DIFFERENCE
+  };
+
     vtkSetClampMacro(OperMode, int, OPER_UNION, OPER_DIFFERENCE2);
     vtkGetMacro(OperMode, int);
 
