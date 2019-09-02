@@ -17,7 +17,7 @@ limitations under the License.
 #ifndef vtkPolyDataBooleanFilter_h
 #define vtkPolyDataBooleanFilter_h
 
-#include "vtkFiltersGeneralModule.h" // For export macro
+#include "BooleanModule.h" // For export macro
 #include <vtkPolyDataAlgorithm.h>
 
 #include <vector> // For vector
@@ -45,7 +45,7 @@ limitations under the License.
 #define SIDE_START 0
 #define SIDE_END 1
 
-class VTKFILTERSGENERAL_EXPORT StripPt {
+class BOOLEAN_EXPORT StripPt {
 public:
     StripPt () : t(0), capt(CAPT_NOT), catched(true) {
         edge[0] = NO_USE;
@@ -77,7 +77,7 @@ public:
     bool catched;
 };
 
-class VTKFILTERSGENERAL_EXPORT StripPtR {
+class BOOLEAN_EXPORT StripPtR {
 public:
     StripPtR (int _ind) : ind(_ind)/*, desc{NO_USE, NO_USE}*/ {
         strip = NO_USE;
@@ -110,7 +110,7 @@ typedef std::map<int, StripPt> StripPtsType;
 typedef std::deque<StripPtR> StripType;
 typedef std::vector<StripType> StripsType;
 
-class VTKFILTERSGENERAL_EXPORT PStrips {
+class BOOLEAN_EXPORT PStrips {
 public:
     PStrips () {}
     double n[3];
@@ -123,7 +123,7 @@ typedef std::map<int, PStrips> PolyStripsType;
 
 typedef std::vector<std::reference_wrapper<StripPtR>> RefsType;
 
-class VTKFILTERSGENERAL_EXPORT StripPtL {
+class BOOLEAN_EXPORT StripPtL {
 public:
     StripPtL (const StripPt &sp) : ind(sp.ind) {
         Cpy(pt, sp.pt, 3);
@@ -139,7 +139,7 @@ public:
     }
 };
 
-class VTKFILTERSGENERAL_EXPORT StripPtL2 {
+class BOOLEAN_EXPORT StripPtL2 {
 public:
     StripPtL2 (const StripPt &sp) : ind(sp.ind), t(sp.t), history(sp.history) {
         Cpy(pt, sp.pt, 3);
@@ -159,7 +159,7 @@ public:
     std::vector<Pair> history;
 };
 
-class VTKFILTERSGENERAL_EXPORT StripPtL3 {
+class BOOLEAN_EXPORT StripPtL3 {
 public:
     StripPtL3 (const double *_pt, double _t, int _ind = NO_USE) : t(_t), ind(_ind) {
         Cpy(pt, _pt, 3);
@@ -180,7 +180,7 @@ public:
     }
 };
 
-class VTKFILTERSGENERAL_EXPORT MergePt {
+class BOOLEAN_EXPORT MergePt {
 public:
     MergePt (int _polyInd, int _ind, double *_pt) : polyInd(_polyInd), ind(_ind) {
         Cpy(pt, _pt, 3);
@@ -192,7 +192,7 @@ public:
 
 typedef std::vector<IdsType> HolesType;
 
-class VTKFILTERSGENERAL_EXPORT _Wrapper {
+class BOOLEAN_EXPORT _Wrapper {
     vtkPolyData *pd;
     IdsType descIds;
     int origId;
@@ -218,7 +218,7 @@ enum class Rel {
 
 typedef std::map<int, Rel> RelationsType;
 
-class VTKFILTERSGENERAL_EXPORT vtkPolyDataBooleanFilter : public vtkPolyDataAlgorithm {
+class BOOLEAN_EXPORT vtkPolyDataBooleanFilter : public vtkPolyDataAlgorithm {
     vtkPolyData *resultA, *resultB, *contLines;
     vtkPolyData *modPdA, *modPdB;
     vtkCellData *cellDataA, *cellDataB;

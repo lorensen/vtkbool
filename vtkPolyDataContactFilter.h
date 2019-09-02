@@ -17,7 +17,7 @@ limitations under the License.
 #ifndef vtkPolyDataContactFilter_h
 #define vtkPolyDataContactFilter_h
 
-#include "vtkFiltersGeneralModule.h" // For export macro
+#include "BooleanModule.h" // For export macro
 #include <vtkPolyDataAlgorithm.h>
 
 #include "Utilities.h" // For Utilties
@@ -30,7 +30,7 @@ enum class _Src {
     B = 2
 };
 
-class VTKFILTERSGENERAL_EXPORT InterPtType {
+class BOOLEAN_EXPORT InterPtType {
 public:
   InterPtType () : ind(0), onEdge(false), end(NO_USE), count(1), srcA(NO_USE), srcB(NO_USE) {}
 
@@ -87,7 +87,7 @@ typedef std::vector<InterPtType> InterPtsType;
 
 typedef std::vector<std::pair<InterPtType, InterPtType> > OverlapsType;
 
-class VTKFILTERSGENERAL_EXPORT vtkPolyDataContactFilter : public vtkPolyDataAlgorithm {
+class BOOLEAN_EXPORT vtkPolyDataContactFilter : public vtkPolyDataAlgorithm {
 
     void PreparePolyData (vtkPolyData *pd);
 
