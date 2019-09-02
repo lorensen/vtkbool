@@ -14,6 +14,7 @@ DEPENDS
 TEST_DEPENDS
   VTK::RenderingFreeType
   VTK::FiltersSources
-  VTK::TestingCore
+  VTK::RenderingOpenGL2
+  VTK::TestingRendering
 DESCRIPTION
  "This module contains classes to do polydata boolean operations."

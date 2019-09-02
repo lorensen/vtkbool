@@ -28,6 +28,8 @@ limitations under the License.
 #include <cfloat>
 #include <exception>
 
+#include "BooleanModule.h" // For export macro
+
 #define NO_USE -1
 #define PI std::acos(-1)
 
@@ -56,7 +58,7 @@ public:
 
 typedef std::vector<int> IdsType;
 
-class Point {
+class BOOLEAN_EXPORT Point {
     static int _tag;
 public:
     int id;

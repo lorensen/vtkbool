@@ -25,6 +25,7 @@ limitations under the License.
 #include <vtkIdList.h>
 
 #include "Tools.h"
+#include "BooleanModule.h" // For export macro
 
 double GetAngle (double *vA, double *vB, double *n);
 double GetD (double *a, double *b);
@@ -37,7 +38,7 @@ void WriteVTK (const char *name, vtkPolyData *pd);
 /* Misc */
 double Mod (int a, int b);
 
-class Base {
+class BOOLEAN_EXPORT Base {
 public:
     Base (vtkPoints *pts, vtkIdList *poly);
     Base () {}

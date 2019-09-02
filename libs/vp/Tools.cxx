@@ -279,8 +279,3 @@ void GetSect (int tagA, int tagB, PolyType &poly) {
         return p.tag == tagB;
     })+1, poly.end());
 }
-
-#ifndef POINT_TAG_INITIALIZED
-int Point::_tag = 0;
-#define POINT_TAG_INITIALIZED
-#endif
