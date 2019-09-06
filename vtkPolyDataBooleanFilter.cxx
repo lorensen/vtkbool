@@ -3417,9 +3417,3 @@ void vtkPolyDataBooleanFilter::DecPolys_ (vtkPolyData *pd, InvolvedType &involve
     cells->Delete();
 
 }
-#include "Utilities.cxx"
-#include "RmTrivials.cxx"
-#include "VisPoly.cxx"
-#include "Decomposer.cxx"
-#include "Merger.cxx"
-#include "Tools.cxx"
