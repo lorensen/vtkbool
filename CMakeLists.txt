@@ -17,6 +17,12 @@ message(STATUS "Boolean: Building as a Remote VTK module")
 set(Module_SRCS
     vtkPolyDataBooleanFilter.cxx
     vtkPolyDataContactFilter.cxx
+    Utilities.cxx
+    libs/decomp/Decomposer.cxx
+    libs/merger/Merger.cxx
+    libs/vp/RmTrivials.cxx
+    libs/vp/VisPoly.cxx
+    libs/vp/Tools.cxx  
     )
 set(VTK_BUILD_TESTING "YES")
 include_directories(libs/merger libs/decomp libs/vp libs/aabb)
