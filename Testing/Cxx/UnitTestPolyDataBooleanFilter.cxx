@@ -45,8 +45,8 @@ limitations under the License.
 #include <array>
 
 #include "vtkPolyDataBooleanFilter.h"
+#include "Tools.h"
 
-int Point::_tag = 0;
 typedef std::map<int, IdsType> LinksType;
 
 class Test

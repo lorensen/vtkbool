@@ -20,6 +20,8 @@ limitations under the License.
 
 #include "Tools.h"
 
+int Point::_tag = 0;
+
 double Normalize (double *v, const int n) {
     double l;
 
