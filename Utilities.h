@@ -27,16 +27,16 @@ limitations under the License.
 #include "Tools.h"
 #include "BooleanModule.h" // For export macro
 
-double GetAngle (double *vA, double *vB, double *n);
-double GetD (double *a, double *b);
+BOOLEAN_EXPORT double GetAngle (double *vA, double *vB, double *n);
+BOOLEAN_EXPORT double GetD (double *a, double *b);
 
 /* VTK */
-void ComputeNormal (vtkPoints *pts, double *n, vtkIdList *poly = nullptr);
-void FindPoints (vtkKdTreePointLocator *pl, const double *pt, vtkIdList *pts, double tol = 1e-6);
-void WriteVTK (const char *name, vtkPolyData *pd);
+BOOLEAN_EXPORT void ComputeNormal (vtkPoints *pts, double *n, vtkIdList *poly = nullptr);
+BOOLEAN_EXPORT void FindPoints (vtkKdTreePointLocator *pl, const double *pt, vtkIdList *pts, double tol = 1e-6);
+BOOLEAN_EXPORT void WriteVTK (const char *name, vtkPolyData *pd);
 
 /* Misc */
-double Mod (int a, int b);
+BOOLEAN_EXPORT double Mod (int a, int b);
 
 class BOOLEAN_EXPORT Base {
 public:
