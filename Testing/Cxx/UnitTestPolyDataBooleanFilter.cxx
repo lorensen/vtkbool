@@ -395,16 +395,17 @@ public:
 
 int UnitTestPolyDataBooleanFilter (int argc, char *argv[])
 {
-  if (argc < 2)
+  if (argc < 1)
   {
     std::cout << "Usage: " << argv[0] << " case(0-15)" << std::endl;
     return EXIT_FAILURE;
   }
   int t = 0;
-  if (argc > 2)
+  if (argc > 1)
   {
-    t = std::atoi(argv[2]);
+    t = std::atoi(argv[1]);
   }
+  std::cout << "Running test " << t << std::endl;
   if (t == 0)
   {
     vtkCubeSource *cu = vtkCubeSource::New();
