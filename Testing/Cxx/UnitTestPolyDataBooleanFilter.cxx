@@ -46,6 +46,7 @@ limitations under the License.
 
 #include "vtkPolyDataBooleanFilter.h"
 #include "Tools.h"
+#include "Utilities.h"
 
 typedef std::map<int, IdsType> LinksType;
 
@@ -1276,10 +1277,10 @@ int UnitTestPolyDataBooleanFilter (int argc, char *argv[])
     bf->AddObserver(vtkCommand::ErrorEvent, obs);
 
     std::vector<std::array<double, 4>> data{
-      {.8, .8, .2, 1},
-      {.8, .5, .5, .8},
-      {.5, .5, .5, 1},
-      {.5, .5, .5, .8}
+      {{.8, .8, .2, 1}},
+      {{.8, .5, .5, .8}},
+      {{.5, .5, .5, 1}},
+      {{.5, .5, .5, .8}}
     };
 
     std::vector<bool> errors;
@@ -1312,5 +1313,3 @@ int UnitTestPolyDataBooleanFilter (int argc, char *argv[])
   }
   return EXIT_SUCCESS;
 }
-#include "Utilities.cxx"
-#include "Tools.cxx"
