@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+cmake_minimum_required(VERSION 3.1)
+project(vtkbool VERSION 2.7.2)
+
 if(DEFINED VTK_MODULE_ENABLE_VTK_Boolean)
 message(STATUS "Boolean: Building as a Remote VTK module")
 set(Module_SRCS
@@ -38,9 +41,10 @@ set_source_files_properties(
     PROPERTIES WRAP_EXCLUDE 1
     )
 if(MSVC)
-#     add_compile_options(/EHsc)
-#     add_definitions(-D_SCL_SECURE_NO_WARNINGS)
-#     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  target_compile_options(Boolean PUBLIC /DWIN32 /D_WINDOWS /W3 /GR /EHsc)
+#    add_compile_options(/EHsc)
+#    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+#    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 else()
     target_compile_options(Boolean PUBLIC -Wall -Wextra -Wshadow -Woverloaded-virtual -Wno-deprecated -Wno-strict-overflow -Wno-array-bounds)
 endif()
